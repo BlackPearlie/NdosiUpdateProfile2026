@@ -1,0 +1,13 @@
+{
+  "name": "ndosi-playwright-profile-upload",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "prepare": "npx playwright install && node scripts/decode-profile.js",
+    "test": "npx playwright test --reporter=html,list",
+    "test:ci": "npx playwright test --reporter=html --output=playwright-report && npx playwright show-report playwright-report || true"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}
