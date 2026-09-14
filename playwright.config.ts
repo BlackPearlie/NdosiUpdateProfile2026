@@ -7,13 +7,22 @@ export default defineConfig({
   outputDir: 'test-results',
   reporter: [['list'], ['html', { outputFolder: 'playwright-report' }]],
   use: {
-    headless: true,
+    headless: false,
     screenshot: 'only-on-failure',
     trace: 'on-first-retry',
     video: 'retain-on-failure',
     baseURL: process.env.BASE_URL || 'https://ndosisimplifiedautomation.vercel.app/'
   },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } }
+    {
+      name: 'chrome',
+       use: {
+         ...devices['Desktop Chrome'],
+      channel: 'chrome',
+      launchOptions: {
+        args: ['--start-maximized']
+      }
+      }
+    }
   ]
 });

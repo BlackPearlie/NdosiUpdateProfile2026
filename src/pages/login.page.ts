@@ -21,9 +21,5 @@ export class LoginPage extends BasePage {
     await this.click(this.page.locator('xpath=//button[contains(.,"Login")]'));
   }
 
-  async adminLogin(username: string, password: string): Promise<void> {
-    await this.navigate('/');
-    await this.navigateToLoginPage();
-    await this.userLogin(username, password);
-  }
+ 
 }

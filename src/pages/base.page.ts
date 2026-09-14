@@ -67,4 +67,14 @@ export class BasePage {
     async waitForPageLoad() {
         await this.page.waitForLoadState('domcontentloaded');
     }
+
+    async waitForPageReady() {
+        await this.page.waitForFunction(() => document.readyState === 'complete');
+    }
+
+    async scrollToBottom() {
+        await this.page.evaluate(() => {
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    }
 }
