@@ -7,7 +7,7 @@ export default defineConfig({
   outputDir: 'test-results',
   reporter: [['list'], ['html', { outputFolder: 'playwright-report' }]],
   use: {
-    headless: false,
+    headless: Boolean(process.env.CI),
     screenshot: 'only-on-failure',
     trace: 'on-first-retry',
     video: 'retain-on-failure',
