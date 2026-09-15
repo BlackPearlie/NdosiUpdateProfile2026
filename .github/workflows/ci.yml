@@ -28,7 +28,7 @@ jobs:
           NDOSI_USERNAME: ${{ secrets.NDOSI_USERNAME }}
           NDOSI_PASSWORD: ${{ secrets.NDOSI_PASSWORD }}
           PROFILE_PICTURE: assets/mpho.jpg
-        run: npm test
+        run: xvfb-run --auto-servernum npm test
       - name: Upload Playwright Report
         if: always()
         uses: actions/upload-artifact@v7
