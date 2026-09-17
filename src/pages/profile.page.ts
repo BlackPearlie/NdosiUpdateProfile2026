@@ -1,5 +1,13 @@
-import { Page, expect } from '@playwright/test';
+import { Page, Response, expect } from '@playwright/test';
 import { BasePage } from './base.page';
+
+type ProfileUpdateResponse = {
+  success: boolean;
+  message: string;
+};
+
+const profileImageEndpoint = 'https://www.ndosiautomation.co.za/APIDEV/profile/image';
+const profileImageUrl = new URL(profileImageEndpoint);
 
 export class ProfilePage extends BasePage {
 
@@ -9,6 +17,7 @@ export class ProfilePage extends BasePage {
     await this.waitForPageReady();
     await expect(profileHeading).toBeVisible();
   }
+  
   async openEditProfile(): Promise<void> {
     await this.waitForPageReady();
     await this.scrollToBottom();
@@ -30,16 +39,30 @@ export class ProfilePage extends BasePage {
     await fileChooser.setFiles(filePath);
     console.log(`Uploaded file: ${filePath}`);
     console.log(`File Uploaded! `);
-    await this.click(this.page.locator('button:has-text("Save Changes")'));
+    await this.saveProfileImageAndValidateResponse();
     console.log(`Saved Changes!  `);
-    //  await this.page.waitForTimeout(2000);
   }
 
-  async getCurrentProfileImageSrc(): Promise<string> {
-    try {
-      return (await this.page.locator('.profile-picture img').getAttribute('src')) || '';
-    } catch {
-      return '';
-    }
+  async saveProfileImageAndValidateResponse(): Promise<void> {
+    const updateResponsePromise = this.page.waitForResponse(response => {
+      const responseUrl = new URL(response.url());
+      return response.request().method() === 'POST'
+        && responseUrl.origin === profileImageUrl.origin
+        && responseUrl.pathname === profileImageUrl.pathname;
+    });
+
+    await this.click(this.page.locator('button:has-text("Save Changes")'));
+    const updateResponse = await updateResponsePromise;
+    await this.validateProfilePictureUpdateResponse(updateResponse);
   }
+
+  async validateProfilePictureUpdateResponse(response: Response): Promise<void> {
+    const body = await response.json() as ProfileUpdateResponse;
+    expect(response.ok()).toBeTruthy();
+    expect(body.success).toBeTruthy();
+    expect(body.message).toBe('Profile image uploaded successfully');
+    console.log(`Profile update response message: ${body.message}`);
+  }
+
+ 
 }
