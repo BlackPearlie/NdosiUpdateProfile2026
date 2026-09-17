@@ -1,0 +1,14 @@
+Uploaded file: assets/wallpaper.jpg
+File Uploaded! 
+Profile update response message: Profile image uploaded successfully
+Saved Changes!  
+GET https://www.ndosiautomation.co.za/APIDEV/groups -> 200
+POST https://www.ndosiautomation.co.za/APIDEV/login -> 200
+GET https://www.ndosiautomation.co.za/APIDEV/my-enrollments -> 200
+GET https://www.ndosiautomation.co.za/APIDEV/profile -> 200
+GET https://www.ndosiautomation.co.za/APIDEV/my-instructor-tasks -> 200
+GET https://www.ndosiautomation.co.za/APIDEV/student/today -> 404
+GET https://www.ndosiautomation.co.za/APIDEV/my-instructors/today -> 200
+GET https://www.ndosiautomation.co.za/APIDEV/my-testimonials -> 200
+PUT https://www.ndosiautomation.co.za/APIDEV/profile -> 200
+POST https://www.ndosiautomation.co.za/APIDEV/profile/image -> 200

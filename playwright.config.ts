@@ -5,7 +5,11 @@ export default defineConfig({
   timeout: 60_000,
   retries: 1,
   outputDir: 'test-results',
-  reporter: [['list'], ['html', { outputFolder: 'playwright-report' }]],
+  reporter: [
+    ['list'],
+    ['html', { outputFolder: 'playwright-report' }],
+    ['allure-playwright', { resultsDir: 'allure-results' }]
+  ],
   use: {
     headless: false,
     screenshot: 'only-on-failure',

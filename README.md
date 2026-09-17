@@ -31,6 +31,15 @@ CI=true npx playwright test
 $env:CI = 'true'; npx playwright test
 ```
 
+Generate the Allure report after a test run:
+
+```bash
+npm run report:allure
+npx allure open allure-report
+```
+
+The Allure dashboard includes the overall pass percentage, passed/failed/flaky counts, duration, retries, test steps, endpoint attachments, and failure details.
+
 ## Test Coverage
 
 The upload test:
@@ -48,7 +57,7 @@ The known `GET https://www.ndosiautomation.co.za/APIDEV/student/today` response 
 
 - `BASE_URL`, `NDOSI_USERNAME`, `NDOSI_PASSWORD`, and `PROFILE_PICTURE` can be supplied as environment variables.
 - Defaults are defined in `src/utils/testData.ts`.
-- The Playwright browser runs headed locally and headlessly when `CI` is set.
+- The Playwright browser runs headed locally and in CI; CI uses `xvfb-run` to provide a virtual display.
 
 ## CI / GitHub Actions
 
@@ -57,3 +66,4 @@ The workflow is in `.github/workflows/ci.yml`. It runs on pushes to `main` and n
 ## Artifacts
 
 - HTML report: uploaded as `playwright-report` artifact
+- Allure report: uploaded as `allure-report` artifact with pass percentage and test history data
