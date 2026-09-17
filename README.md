@@ -2,40 +2,58 @@
 
 This repository contains a Playwright test that automates uploading a profile picture to the NDOSI automation site and validates related API endpoints.
 
-Setup
+## Setup
 
-1. Create repository and push these files (commit multiple times during development).
-2. Add repository Secrets in GitHub: `BASE_URL`, `NDOSI_USERNAME`, `NDOSI_PASSWORD`.
-3. Install dependencies locally:
+1. Add the following GitHub repository secrets under **Settings > Secrets and variables > Actions**:
+	- `BASE_URL`: the application URL, for example `https://ndosisimplifiedautomation.vercel.app/`
+	- `NDOSI_USERNAME`: the test account email
+	- `NDOSI_PASSWORD`: the test account password
+2. Install dependencies locally:
 
 ```bash
 npm ci
 npm run prepare
 ```
 
-Running tests locally
+## Running Tests Locally
 
 ```bash
 npx playwright test
 ```
 
-What to update
+For a CI-style headless run:
 
-- Update selectors in `src/selectors.ts` to match the target application.
-- Update `BASE_URL` and credentials as GitHub secrets or environment variables.
+```bash
+# macOS/Linux
+CI=true npx playwright test
 
-CI / GitHub Actions
+# Windows PowerShell
+$env:CI = 'true'; npx playwright test
+```
 
-Workflows are in `.github/workflows/ci.yml`. Tests run on push to `main` and nightly at 00:00 SAST (cron schedule uses 22:00 UTC).
+## Test Coverage
 
-Artifacts
+The upload test:
+
+- Logs in and navigates to the profile page.
+- Uploads the configured profile image and saves the change.
+- Validates the `POST https://www.ndosiautomation.co.za/APIDEV/profile/image` response.
+- Requires `success: true` and the message `Profile image uploaded successfully`.
+- Captures all `fetch` and `XHR` API responses used during the UI flow.
+- Logs each endpoint and validates that its status code is below `400`.
+
+The known `GET https://www.ndosiautomation.co.za/APIDEV/student/today` response currently returns `404`. It is logged as a non-blocking endpoint because it is unrelated to profile-image upload; all other captured endpoint failures remain test failures.
+
+## Configuration
+
+- `BASE_URL`, `NDOSI_USERNAME`, `NDOSI_PASSWORD`, and `PROFILE_PICTURE` can be supplied as environment variables.
+- Defaults are defined in `src/utils/testData.ts`.
+- The Playwright browser runs headed locally and headlessly when `CI` is set.
+
+## CI / GitHub Actions
+
+The workflow is in `.github/workflows/ci.yml`. It runs on pushes to `main` and nightly at 00:00 SAST (22:00 UTC), uses Node 20, and runs the headed browser through `xvfb-run` on the Ubuntu runner.
+
+## Artifacts
 
 - HTML report: uploaded as `playwright-report` artifact
-- `endpoints.json`: JSON log of API endpoints observed during the test
-
-Notes
-
-- The test captures non-GET network responses during the upload flow and asserts their status codes are < 400. Adjust filtering logic in `tests/upload-profile.spec.ts` if your app uses different request patterns.
-- Replace selectors in `src/selectors.ts` with the app-specific ones before running.
-
--- commit: second update to README for repo push
